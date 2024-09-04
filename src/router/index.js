@@ -6,22 +6,22 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    redirect: '/list',
+    redirect: '/project/list',
   },
   {
-    name: 'List',
-    path: '/list',
-    component: () => import('@/views/list'),
+    name: 'ProjectList',
+    path: '/project/list',
+    component: () => import('@/views/project/list'),
   },
   {
-    name: 'Create',
-    path: '/list/create',
-    component: () => import('@/views/create'),
+    name: 'ProjectCreate',
+    path: '/project/list/create',
+    component: () => import('@/views/project/create'),
   },
   {
-    name: 'Update',
-    path: '/list/update',
-    component: () => import('@/views/update'),
+    name: 'ProjectUpdate',
+    path: '/project/list/update',
+    component: () => import('@/views/project/update'),
   },
 ]
 

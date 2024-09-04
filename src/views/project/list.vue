@@ -1,14 +1,14 @@
 <template>
-  <div class="list">
+  <div class="project-list">
     <action>
       <template slot="left">
         <el-button type="primary" @click="handleCreate">添加</el-button>
-        <el-button>删除</el-button>
+        <el-button :disabled="!selection.length" @click="handleBatchDelete">删除</el-button>
       </template>
     </action>
 
-    <div class="list-table">
-      <el-table :data="tableData">
+    <div class="project-list-table">
+      <el-table v-loading="loading" :data="tableData" @selection-change="selectionChange">
         <el-table-column type="selection" width="60px" />
 
         <el-table-column prop="name" label="名称" width="160px" />
@@ -62,12 +62,19 @@
           <template slot-scope="{ row }">
             <el-button type="text" @click="handleUpdate(row)">编辑</el-button>
 
-            <el-button type="text">删除</el-button>
+            <el-button type="text" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
 
-      <el-pagination background layout="prev, pager, next" :total="1000"> </el-pagination>
+      <el-pagination
+        background
+        :page-size="pagination.pageSize"
+        :current-page="pagination.pageNo"
+        :total="total"
+        layout="total, prev, pager, next"
+        @current-change="handleCurrentChange"
+      />
     </div>
   </div>
 </template>
@@ -75,31 +82,97 @@
 <script>
 import stripJsonComments from 'strip-json-comments'
 import { resolveURL } from '@/utils'
+import { getProjectList, deleteProject } from '@/api/project'
 
 import Action from '@/components/Action.vue'
 import ClipboardLink from '@/components/ClipboardLink'
-import Status from '@/components/Status.vue'
+import Status from './components/Status.vue'
 
 export default {
-  name: 'List',
+  name: 'ProjectList',
   components: { Action, ClipboardLink, Status },
   filters: { resolveURL },
   data() {
     return {
       tableData: [],
+      selection: [],
+      pagination: {
+        pageNo: 1,
+        pageSize: 10,
+      },
+      total: 0,
+      loading: false,
     }
   },
+  mounted() {
+    this.getTableData()
+  },
   methods: {
+    async getTableData() {
+      try {
+        this.loading = true
+
+        const { data } = await getProjectList(this.pagination)
+
+        this.tableData = data.rows || []
+        this.total = data.total || []
+      } catch {
+      } finally {
+        this.loading = false
+      }
+    },
+
+    handleCurrentChange(pageNo) {
+      this.pagination.pageNo = pageNo
+
+      this.getTableData()
+    },
+
+    selectionChange(selection) {
+      this.selection = selection
+    },
+
     handleCreate() {
+      this.$router.push({ path: '/project/list/create' })
+    },
+
+    handleUpdate(row) {
       this.$router.push({
-        path: '/list/create',
+        path: '/project/list/update',
+        query: { id: row.id },
       })
     },
 
-    handleUpdate() {
-      this.$router.push({
-        path: '/list/update',
-      })
+    async handleDelete(row) {
+      try {
+        await this.$confirm(`确认删除 <b>${row.name}</b> 吗？`, '提示', {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        })
+        await deleteProject({ ids: [row.id] })
+
+        this.$message.success('删除成功')
+        this.getTableData()
+      } catch {}
+    },
+
+    async handleBatchDelete() {
+      try {
+        const ids = this.selection.map(e => e.id)
+
+        await this.$confirm(`确认删除选中的 <b>${ids.length}</b> 项吗？`, '提示', {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        })
+        await deleteProject({ ids })
+
+        this.$message.success('删除成功')
+        this.getTableData()
+      } catch {}
     },
 
     getConfig(row) {
@@ -119,7 +192,7 @@ export default {
 </script>
 
 <style scoped>
-.list-table {
+.project-list-table {
   padding: 24px;
   background-color: #141414;
 }

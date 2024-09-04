@@ -1,12 +1,12 @@
 <template>
-  <div class="create">
+  <div class="project-create">
     <action sub-title="添加">
       <template slot="right">
         <el-button type="primary">保存</el-button>
       </template>
     </action>
 
-    <div class="create-content">
+    <div class="project-create-content">
       <config-form />
     </div>
   </div>
@@ -14,22 +14,22 @@
 
 <script>
 import Action from '@/components/Action.vue'
-import ConfigForm from './ConfigForm'
+import ConfigForm from './components/ConfigForm.vue'
 
 export default {
-  name: 'Create',
+  name: 'ProjectCreate',
   components: { Action, ConfigForm },
 }
 </script>
 
 <style scoped>
-.create {
+.project-create {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.create-content {
+.project-create-content {
   flex: 1;
 }
 </style>

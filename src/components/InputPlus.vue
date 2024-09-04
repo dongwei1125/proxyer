@@ -1,5 +1,5 @@
 <template>
-  <div class="input-button">
+  <div class="input-plus">
     <el-input :value="value" v-bind="$attrs" @input="onInput" />
     <slot name="append" />
   </div>
@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: 'InputButton',
+  name: 'InputPlus',
   model: {
     prop: 'value',
     event: 'input',
@@ -35,7 +35,7 @@ export default {
   }
 }
 
-.input-button {
+.input-plus {
   display: inline-flex;
   align-items: center;
 }
