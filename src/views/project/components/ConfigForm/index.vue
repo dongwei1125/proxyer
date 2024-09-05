@@ -82,6 +82,10 @@ export default {
     getValue() {
       return this.form
     },
+
+    setValue(form) {
+      Object.assign(this.form, form)
+    },
   },
 }
 </script>

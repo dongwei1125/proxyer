@@ -2,7 +2,7 @@
   <div class="project-create">
     <action sub-title="添加">
       <template slot="right">
-        <el-button type="primary" @click="handleSave">保存</el-button>
+        <el-button type="primary" :loading="loading" @click="handleSave">保存</el-button>
       </template>
     </action>
 
@@ -21,6 +21,11 @@ import ConfigForm from './components/ConfigForm'
 export default {
   name: 'ProjectCreate',
   components: { Action, ConfigForm },
+  data() {
+    return {
+      loading: false,
+    }
+  },
   methods: {
     async handleSave() {
       try {
@@ -34,6 +39,9 @@ export default {
         const params = form?.getValue()
 
         await createProject(params)
+
+        this.$message.success('新增成功')
+        this.$router.back()
       } catch {
       } finally {
         this.loading = false

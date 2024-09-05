@@ -9,3 +9,5 @@ export const updateProject = data => http.post('/api/project/update', data)
 export const deleteProject = data => http.post('/api/project/delete', data)
 
 export const getProjectPort = params => http.get('/api/project/getPort', { params })
+
+export const getProject = params => http.get('/api/project/getProject', { params })
