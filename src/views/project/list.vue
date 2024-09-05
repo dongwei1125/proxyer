@@ -17,10 +17,10 @@
           <template slot-scope="{ row }">
             <el-select :value="getConfig(row)" size="small">
               <el-option
-                v-for="content in row.configs"
-                :key="content.id"
-                :label="content.name"
-                :value="content.id"
+                v-for="config in row.configs"
+                :key="config.id"
+                :label="config.name"
+                :value="config.id"
               />
             </el-select>
           </template>
@@ -160,7 +160,7 @@ export default {
 
     async handleBatchDelete() {
       try {
-        const ids = this.selection.map(e => e.id)
+        const ids = this.selection.map(el => el.id)
 
         await this.$confirm(`确认删除选中的 <b>${ids.length}</b> 项吗？`, '提示', {
           dangerouslyUseHTMLString: true,
@@ -183,9 +183,9 @@ export default {
 
     getTarget(row) {
       const config = row.configs.find(config => config.select)
-      const content = JSON.parse(stripJsonComments(config.content))
+      const json = JSON.parse(stripJsonComments(config.jsonString))
 
-      return content.target
+      return json.target
     },
   },
 }

@@ -14,7 +14,7 @@
 
 <script>
 import Action from '@/components/Action.vue'
-import ConfigForm from './components/ConfigForm.vue'
+import ConfigForm from './components/ConfigForm'
 
 export default {
   name: 'ProjectUpdate',

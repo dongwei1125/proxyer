@@ -33,30 +33,38 @@ export default {
     }
   },
   watch: {
-    value(string) {
-      if (!this.editor) return
-      if (string === this.editor.getValue()) return
-
-      this.editor?.setValue(string)
+    value() {
+      this.setValue()
     },
   },
-  mounted() {
-    this.init()
+  async mounted() {
+    await this.initEditor()
+    this.setValue()
   },
   beforeDestroy() {
     this.editor?.dispose()
   },
   methods: {
-    async init() {
+    async initEditor() {
+      if (!this.$refs.editor) return
+
       loader.config({ monaco })
       loader.config({ 'vs/nls': { availableLanguages: { '*': 'zh-cn' } } })
 
       const monacoInstance = await loader.init()
 
       this.editor = monacoInstance.editor.create(this.$refs.editor, this.options)
+
       this.editor.getModel().onDidChangeContent(() => {
         this.$emit('input', this.editor.getValue())
       })
+    },
+
+    setValue() {
+      if (!this.editor) return
+      if (this.value === this.editor.getValue()) return
+
+      this.editor.setValue(this.value)
     },
   },
 }
