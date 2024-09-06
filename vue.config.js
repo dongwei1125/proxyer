@@ -6,4 +6,11 @@ module.exports = defineConfig({
   configureWebpack: {
     plugins: [new MonacoWebpackPlugin()],
   },
+  devServer: {
+    proxy: {
+      '^/api': {
+        target: 'http://localhost:8800',
+      },
+    },
+  },
 })
