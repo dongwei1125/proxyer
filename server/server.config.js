@@ -1,3 +1,8 @@
+const { homedir } = require('os')
+const { join } = require('path')
+
 module.exports = {
-  PORT: 8800,
+  port: 8800,
+  dbDir: join(homedir(), '.proxyer'),
+  dbFilename: 'db.json',
 }

@@ -9,6 +9,113 @@
   <title>
     <%= htmlWebpackPlugin.options.title %>
   </title>
+
+  <style>
+    html {
+      line-height: 1.15;
+    }
+
+    html,
+    body,
+    #app {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.85);
+      background-color: #000;
+      font-family: Consolas, Inter, Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, 微软雅黑, Arial, sans-serif;
+    }
+  </style>
+
+  <style>
+    .loading-wrap {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      font-family: 'Segoe UI';
+    }
+
+    .loading-wrap>h1 {
+      color: #409eff;
+      font-size: 80px;
+      text-align: center;
+      margin: 0.67em 0;
+    }
+
+    .loading-wrap .loading {
+      padding: 98px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .dot {
+      width: 32px;
+      height: 32px;
+      font-size: 32px;
+      transform: rotate(45deg);
+      position: relative;
+      animation: spin 1.2s infinite linear;
+    }
+
+    .dot i {
+      width: 14px;
+      height: 14px;
+      position: absolute;
+      display: block;
+      background-color: #409eff;
+      border-radius: 100%;
+      transform: scale(0.75);
+      transform-origin: 50% 50%;
+      opacity: 0.3;
+      animation: blink 1s infinite linear alternate;
+    }
+
+    .dot i:nth-child(1) {
+      top: 0;
+      left: 0;
+    }
+
+    .dot i:nth-child(2) {
+      top: 0;
+      right: 0;
+      animation-delay: 0.4s;
+    }
+
+    .dot i:nth-child(3) {
+      right: 0;
+      bottom: 0;
+      animation-delay: 0.8s;
+    }
+
+    .dot i:nth-child(4) {
+      bottom: 0;
+      left: 0;
+      animation-delay: 1.2s;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(405deg);
+      }
+    }
+
+    @keyframes blink {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .loading-wrap .copyright {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
 </head>
 
 <body>
@@ -16,7 +123,23 @@
     <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
         Please enable it to continue.</strong>
   </noscript>
-  <div id="app"></div>
+
+  <div id="app">
+    <div class="loading-wrap">
+      <h1>Proxy 0.1.0</h1>
+
+      <div class="loading">
+        <span class="dot">
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+        </span>
+      </div>
+
+      <div class="copyright">Powered by dongwei</div>
+    </div>
+  </div>
   <!-- built files will be auto injected -->
 </body>
 

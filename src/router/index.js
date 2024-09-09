@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+import ProjectList from '@/views/project/list'
+import ProjectCreate from '@/views/project/create'
+import ProjectUpdate from '@/views/project/update'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -11,17 +15,17 @@ const routes = [
   {
     name: 'ProjectList',
     path: '/project/list',
-    component: () => import('@/views/project/list'),
+    component: ProjectList,
   },
   {
     name: 'ProjectCreate',
     path: '/project/list/create',
-    component: () => import('@/views/project/create'),
+    component: ProjectCreate,
   },
   {
     name: 'ProjectUpdate',
     path: '/project/list/update',
-    component: () => import('@/views/project/update'),
+    component: ProjectUpdate,
   },
 ]
 

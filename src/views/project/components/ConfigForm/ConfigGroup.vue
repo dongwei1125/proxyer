@@ -69,7 +69,7 @@ export default {
       if (this.value.length) return
 
       const config = this.generateConfig()
-      const configs = [config]
+      const configs = [{ ...config, select: true, editing: true }]
 
       this.$emit('change', configs)
     },
@@ -85,7 +85,7 @@ export default {
       } else {
         const [firstConfig, ...rest] = this.value
 
-        configs = [{ ...firstConfig, editing: true }, ...rest]
+        configs = [{ ...firstConfig, select: true, editing: true }, ...rest]
       }
 
       this.$emit('change', configs)

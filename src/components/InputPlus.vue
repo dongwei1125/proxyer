@@ -14,7 +14,7 @@ export default {
   },
   props: {
     value: {
-      type: String,
+      type: [String, Number],
       default: '',
     },
   },
@@ -51,7 +51,7 @@ export default {
   height: 36px;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-  margin-left: -1px;
+  margin-left: -1px !important;
   position: relative;
 
   @include active;

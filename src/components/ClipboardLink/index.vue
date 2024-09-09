@@ -1,7 +1,5 @@
 <template>
-  <el-tooltip content="点击复制到剪切板" placement="top" effect="light">
-    <el-link type="primary" :underline="false" @click="handleCopy">{{ text }}</el-link>
-  </el-tooltip>
+  <span @click="handleCopy">{{ text }}</span>
 </template>
 
 <script>
@@ -28,3 +26,20 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+span {
+  width: 100%;
+  color: #409eff;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  cursor: pointer;
+
+  &:hover {
+    color: #3375b9;
+  }
+}
+</style>
