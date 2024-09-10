@@ -5,7 +5,6 @@ module.exports = defineConfig({
   transpileDependencies: true,
   productionSourceMap: false,
   outputDir: './server/public',
-  publicPath: './',
   configureWebpack: {
     plugins: [new MonacoWebpackPlugin()],
   },

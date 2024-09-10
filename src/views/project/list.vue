@@ -54,15 +54,33 @@
         <el-table-column label="服务" width="160px">
           <template slot-scope="{ row }">
             <el-tooltip content="启动" placement="top" effect="light">
-              <el-button icon="el-icon-video-play" circle size="mini" @click="handleStart(row)" />
+              <el-button
+                icon="el-icon-video-play"
+                circle
+                size="mini"
+                :loading="row.startLoading"
+                @click="handleStart(row)"
+              />
             </el-tooltip>
 
             <el-tooltip content="重载" placement="top" effect="light">
-              <el-button icon="el-icon-refresh" circle size="mini" @click="handleReload(row)" />
+              <el-button
+                icon="el-icon-refresh"
+                circle
+                size="mini"
+                :loading="row.reloadLoading"
+                @click="handleReload(row)"
+              />
             </el-tooltip>
 
             <el-tooltip content="停止" placement="top" effect="light">
-              <el-button icon="el-icon-switch-button" circle size="mini" @click="handleStop(row)" />
+              <el-button
+                icon="el-icon-switch-button"
+                circle
+                size="mini"
+                :loading="row.stopLoading"
+                @click="handleStop(row)"
+              />
             </el-tooltip>
           </template>
         </el-table-column>
@@ -129,8 +147,15 @@ export default {
         this.loading = true
 
         const { data } = await getProjectList(this.pagination)
+        const rows = data.rows || []
+        const tableData = rows.map(row => ({
+          ...row,
+          startLoading: false,
+          reloadLoading: false,
+          stopLoading: false,
+        }))
 
-        this.tableData = data.rows || []
+        this.tableData = tableData
         this.total = data.total || 0
       } catch {
       } finally {
@@ -159,25 +184,40 @@ export default {
 
     async handleStart(row) {
       try {
-        await startProject({ id: row.id })
+        row.startLoading = true
+
+        const { data } = await startProject({ id: row.id })
+
+        this.updateRow(data)
       } catch {
       } finally {
+        row.startLoading = false
       }
     },
 
     async handleReload(row) {
       try {
-        await reloadProject({ id: row.id })
+        row.reloadLoading = false
+
+        const { data } = await reloadProject({ id: row.id })
+
+        this.updateRow(data)
       } catch {
       } finally {
+        row.reloadLoading = false
       }
     },
 
     async handleStop(row) {
       try {
-        await stopProject({ id: row.id })
+        row.stopLoading = true
+
+        const { data } = await stopProject({ id: row.id })
+
+        this.updateRow(data)
       } catch {
       } finally {
+        row.stopLoading = false
       }
     },
 

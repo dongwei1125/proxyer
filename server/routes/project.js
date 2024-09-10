@@ -1,4 +1,5 @@
 const { Router } = require('express')
+const stripJsonComments = require('strip-json-comments')
 
 const DatabaseHandler = require('../utils/DatabaseHandler')
 const ResponseHandler = require('../utils/ResponseHandler')
@@ -77,10 +78,41 @@ router.post('/switchConfig', (request, response) => {
   responseHandler.success(request, response, { data: project })
 })
 
-router.post('/start', (request, response) => { })
+router.post('/start', async (request, response) => {
+  const id = request.body.id
+  const project = databaseHandler.findById(id)
+  const config = project.configs.find(config => config.select)
+  const json = JSON.parse(stripJsonComments(config.jsonString))
+
+  if (project.status === SERVER_STATUS.STOP) {
+    if (await portHandler.checkPort(project.port)) {
+      await proxyHandler.start(id, project.port, json)
+
+      project.status = SERVER_STATUS.RUNNING
+
+      databaseHandler.update(project)
+    } else {
+      responseHandler.fail(request, response, { message: `${project.port} 端口被占用，请更换端口` })
+
+      return
+    }
+  }
+
+  responseHandler.success(request, response, { data: project })
+})
 
 router.post('/reload', (request, response) => { })
 
-router.post('/stop', (request, response) => { })
+router.post('/stop', async (request, response) => {
+  const id = request.body.id
+  const project = databaseHandler.findById(id)
+
+  await proxyHandler.stop(id)
+
+  project.status = SERVER_STATUS.STOP
+
+  databaseHandler.update(project)
+  responseHandler.success(request, response, { data: project })
+})
 
 module.exports = router
