@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="" class="dark">
+<html lang="">
 
 <head>
   <meta charset="utf-8">
@@ -9,6 +9,7 @@
   <title>
     <%= htmlWebpackPlugin.options.title %>
   </title>
+  <script src="https://unpkg.com/element-theme-darkplus/utils/dark-mode.js"></script>
 
   <style>
     html {
@@ -23,9 +24,15 @@
 
     body {
       margin: 0;
-      color: rgba(255, 255, 255, 0.85);
-      background-color: #000;
+      color: #303133;
+      background-color: #f4f4f5;
+      transition: background-color 0.2s;
       font-family: Consolas, Inter, Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, 微软雅黑, Arial, sans-serif;
+    }
+
+    html.dark body {
+      color: #e5eaf3;
+      background-color: #000000;
     }
   </style>
 

@@ -23,7 +23,7 @@ export default {
       editor: null,
       options: {
         value: this.value,
-        theme: 'vs-dark',
+        theme: 'vs-light',
         language: 'json',
         tabSize: 2, // Tab 缩进
         automaticLayout: true, // 自动布局
@@ -75,6 +75,5 @@ export default {
   width: 100%;
   height: 100%;
   outline-color: transparent;
-  background-color: #1e1e1e;
 }
 </style>

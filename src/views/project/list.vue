@@ -288,7 +288,6 @@ export default {
 <style scoped>
 .project-list-table {
   padding: 24px;
-  background-color: #141414;
 }
 
 .el-pagination {

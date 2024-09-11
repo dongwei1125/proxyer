@@ -4,6 +4,8 @@
 
     <h1>Proxyer 0.1.0</h1>
 
+    <theme-toggle />
+
     <el-button type="text" icon="el-icon-document-copy">文档</el-button>
 
     <el-button type="text" icon="el-icon-info" @click="visible = true">关于</el-button>
@@ -13,11 +15,12 @@
 </template>
 
 <script>
+import ThemeToggle from '../ThemeToggle'
 import AboutDialog from './AboutDialog.vue'
 
 export default {
   name: 'Banner',
-  components: { AboutDialog },
+  components: { ThemeToggle, AboutDialog },
   data() {
     return {
       visible: false,
@@ -33,7 +36,6 @@ export default {
   padding: 0 20px;
   display: flex;
   align-items: center;
-  background-color: #1f1f1f;
 }
 
 img {
@@ -43,7 +45,10 @@ img {
 h1 {
   flex: 1;
   font-size: 20px;
-  color: #adadad;
   margin: 0 0 0 20px;
+}
+
+.el-button {
+  margin-left: 10px;
 }
 </style>

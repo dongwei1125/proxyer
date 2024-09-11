@@ -176,7 +176,6 @@ export default {
 .config-form {
   height: 100%;
   display: flex;
-  background-color: #141414;
 }
 
 .el-form {

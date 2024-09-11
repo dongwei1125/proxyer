@@ -2,10 +2,39 @@
 
 .el-container {
   height: 100%;
-  background-color: #000;
 }
 
 .el-header,
 .el-main {
   padding: 0;
+}
+
+.banner {
+  background-color: #fff;
+}
+
+.project-list-table {
+  background-color: #fff;
+}
+
+.el-form {
+  background-color: #fff;
+}
+
+html.dark {
+  .banner {
+    background-color: #141414;
+  }
+
+  .project-list-table {
+    background-color: #141414;
+  }
+
+  .el-form {
+    background-color: #141414;
+  }
+
+  .monaco-editor {
+    background-color: #1e1e1e;
+  }
 }
