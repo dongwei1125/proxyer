@@ -6,6 +6,7 @@
       <el-col v-for="config in value" :key="config.id" :span="12">
         <input-plus
           :value="config.name"
+          :maxlength="32"
           :disabled="!config.editing"
           @input="name => onEditConfigName(name, config)"
         >
@@ -92,10 +93,13 @@ export default {
     },
 
     handleCreate() {
-      const configs = [...this.value]
+      const configs = this.value.map(el => ({
+        ...el,
+        editing: false,
+      }))
       const config = this.generateConfig()
 
-      this.$emit('change', [...configs, config])
+      this.$emit('change', [...configs, { ...config, editing: true }])
     },
 
     onEditConfigName(name, config) {

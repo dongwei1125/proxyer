@@ -2,28 +2,22 @@ const { createServer } = require('http')
 const httpProxy = require('http-proxy')
 const HttpProxyRules = require('http-proxy-rules')
 
-function createPromise() {
-  var resolve, reject
-
-  const promise = new Promise((resolveCallback, rejectCallback) => {
-    resolve = resolveCallback
-    reject = rejectCallback
-  })
-
-  return {
-    promise,
-    resolve,
-    reject,
-  }
-}
+const { createPromise } = require('../utils')
 
 class ProxyServer {
+  /**
+   * @param {Number} port
+   * @param {Object} json
+   */
   constructor(port, json) {
     this.port = port
     this.config = json
     this.server = null
   }
 
+  /**
+   * @returns {Promise}
+   */
   async start() {
     const { promise, resolve, reject } = createPromise()
     const { target, rules, ...rest } = this.config
@@ -63,15 +57,14 @@ class ProxyServer {
     return promise
   }
 
+  /**
+   * @returns {Promise}
+   */
   async stop() {
     const { promise, resolve, reject } = createPromise()
 
     this.server.close(error => {
-      if (error) {
-        reject(error)
-      } else {
-        resolve()
-      }
+      error ? reject(error) : resolve()
     })
 
     return promise

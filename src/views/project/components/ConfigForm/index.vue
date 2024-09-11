@@ -14,7 +14,13 @@
       </el-form-item>
 
       <el-form-item label="描述" prop="description">
-        <el-input v-model="form.description" type="textarea" :rows="3" placeholder="请输入描述" />
+        <el-input
+          v-model="form.description"
+          type="textarea"
+          :rows="4"
+          :maxlength="128"
+          placeholder="请输入描述"
+        />
       </el-form-item>
     </el-form>
 
@@ -58,23 +64,27 @@ export default {
       jsonRules: [
         {
           validator(config, json, callback) {
-            if (json) {
-              callback()
-            } else {
-              callback(new Error(`${config.name} 配置项 JSON 格式错误`))
-            }
+            if (!json) callback(new Error(`${config.name} 配置项 JSON 格式错误`))
           },
         },
         {
           validator(config, json, callback) {
-            if (json.target) {
-              if (validateURL(json.target)) {
-                callback()
-              } else {
-                callback(new Error(`${config.name} 配置项 JSON 对象 target 属性 URL 格式错误`))
+            const name = config.name
+            const target = json.target
+            const rules = json.rules || {}
+            const keys = Object.keys(rules)
+            const length = keys.length
+
+            if (!target && !length) callback(new Error(`${name} 配置项 JSON 对象缺少 target/rules 规则`))
+
+            if (target && !validateURL(target))
+              callback(new Error(`${name} 配置项 JSON 对象 target 规则 URL 格式错误`))
+
+            if (length) {
+              for (const key of keys) {
+                if (!validateURL(rules[key]))
+                  callback(new Error(`${name} 配置项 JSON 对象 rules.${key} 规则 URL 格式错误`))
               }
-            } else {
-              callback(new Error(`${config.name} 配置项 JSON 对象缺少 target 属性`))
             }
           },
         },
@@ -103,11 +113,7 @@ export default {
     validate() {
       return new Promise(resolve => {
         this.$refs.form?.validate(async valid => {
-          if (!valid) {
-            resolve(false)
-
-            return
-          }
+          if (!valid) return resolve(false)
 
           try {
             await this.validateJsonString()
@@ -135,9 +141,7 @@ export default {
             } catch {}
 
             rule.validator(config, json, error => {
-              if (error instanceof Error) {
-                throw error
-              }
+              if (error instanceof Error) throw error
             })
           }
         }

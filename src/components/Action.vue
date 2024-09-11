@@ -32,11 +32,7 @@ export default {
   },
   methods: {
     handleBack() {
-      if (this.onBack) {
-        this.onBack()
-      } else {
-        this.$router.back()
-      }
+      this.onBack ? this.onBack() : this.$router.back()
     },
   },
 }

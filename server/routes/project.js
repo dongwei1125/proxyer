@@ -1,118 +1,123 @@
 const { Router } = require('express')
 const stripJsonComments = require('strip-json-comments')
 
-const DatabaseHandler = require('../utils/DatabaseHandler')
-const ResponseHandler = require('../utils/ResponseHandler')
-const PortHandler = require('../utils/PortHandler')
-const ProxyHandler = require('../utils/ProxyHandler')
+const DBHandler = require('../handlers/DBHandler')
+const ProxyHandler = require('../handlers/ProxyHandler')
+
+const { getPort } = require('../utils/port')
+const { sendSuccess } = require('../utils/send')
 const { SERVER_STATUS } = require('../utils/const')
 
 const router = Router()
-
-const databaseHandler = new DatabaseHandler()
-const responseHandler = new ResponseHandler()
-const portHandler = new PortHandler()
-const proxyHandler = new ProxyHandler()
+const db = new DBHandler()
+const proxy = new ProxyHandler()
 
 router.get('/list', (request, response) => {
   const query = request.query
   const pageNo = Number(query.pageNo || 1)
   const pageSize = Number(query.pageSize || 10)
 
-  const rows = databaseHandler.getData(pageNo, pageSize)
-  const total = databaseHandler.getTotal()
+  const rows = db.values(pageNo, pageSize)
+  const total = db.total()
   const data = { rows, total, pageNo, pageSize }
 
-  responseHandler.success(request, response, { data })
+  sendSuccess(response, { data })
 })
 
 router.post('/create', (request, response) => {
   const { name, port, configs, description } = request.body
+  const data = db.create({ name, port, configs, description, status: SERVER_STATUS.STOP })
 
-  databaseHandler.create({ name, port, configs, description, status: SERVER_STATUS.STOP })
-
-  responseHandler.success(request, response)
+  sendSuccess(response, { data })
 })
 
-router.post('/update', (request, response) => {
+router.post('/update', async (request, response) => {
   const { id, name, port, configs, description, status } = request.body
 
-  databaseHandler.update({ id, name, port, configs, description, status })
+  if (status === SERVER_STATUS.RUNNING) await proxy.stop(id)
 
-  responseHandler.success(request, response)
+  const data = db.update({ id, name, port, configs, description, status: SERVER_STATUS.STOP })
+
+  sendSuccess(response, { data })
 })
 
-router.post('/delete', (request, response) => {
+router.post('/delete', async (request, response) => {
   const ids = request.body.ids || []
+  const projects = db.findByIds(ids).filter(project => project.status === SERVER_STATUS.RUNNING)
+  const stops = projects.map(project => proxy.stop(project.id))
 
-  databaseHandler.deleteByIds(ids)
+  await Promise.allSettled(stops)
 
-  responseHandler.success(request, response)
+  db.deleteByIds(ids)
+
+  sendSuccess(response)
 })
 
 router.get('/getPort', async (request, response) => {
-  const port = await portHandler.getPort()
+  const data = await getPort()
 
-  responseHandler.success(request, response, { data: port })
+  sendSuccess(response, { data })
 })
 
 router.get('/getProject', (request, response) => {
   const id = request.query.id
-  const data = databaseHandler.findById(id)
+  const data = db.findById(id)
 
-  responseHandler.success(request, response, { data })
+  sendSuccess(response, { data })
 })
 
-router.post('/switchConfig', (request, response) => {
+router.post('/switchConfig', async (request, response) => {
   const { id, configId } = request.body
 
-  const project = databaseHandler.findById(id)
+  const project = db.findById(id)
   const oldSelectedConfig = project.configs.find(config => config.select)
   const newSelectedConfig = project.configs.find(config => config.id === configId)
 
   oldSelectedConfig.select = false
   newSelectedConfig.select = true
 
-  databaseHandler.update(project)
+  if (project.status === SERVER_STATUS.RUNNING) {
+    await proxy.stop(id)
 
-  responseHandler.success(request, response, { data: project })
+    project.status = SERVER_STATUS.STOP
+  }
+
+  const data = db.update(project)
+
+  sendSuccess(response, { data })
 })
 
 router.post('/start', async (request, response) => {
   const id = request.body.id
-  const project = databaseHandler.findById(id)
+  const project = db.findById(id)
   const config = project.configs.find(config => config.select)
   const json = JSON.parse(stripJsonComments(config.jsonString))
+  const { port, status } = project
 
-  if (project.status === SERVER_STATUS.STOP) {
-    if (await portHandler.checkPort(project.port)) {
-      await proxyHandler.start(id, project.port, json)
+  if (status === SERVER_STATUS.STOP) {
+    await proxy.start(id, port, json)
 
-      project.status = SERVER_STATUS.RUNNING
-
-      databaseHandler.update(project)
-    } else {
-      responseHandler.fail(request, response, { message: `${project.port} 端口被占用，请更换端口` })
-
-      return
-    }
+    project.status = SERVER_STATUS.RUNNING
   }
 
-  responseHandler.success(request, response, { data: project })
+  const data = db.update(project)
+
+  sendSuccess(response, { data })
 })
 
 router.post('/reload', (request, response) => { })
 
 router.post('/stop', async (request, response) => {
   const id = request.body.id
-  const project = databaseHandler.findById(id)
+  const project = db.findById(id)
 
-  await proxyHandler.stop(id)
+  await proxy.stop(id)
 
   project.status = SERVER_STATUS.STOP
 
-  databaseHandler.update(project)
-  responseHandler.success(request, response, { data: project })
+  const data = db.update(project)
+
+  sendSuccess(response, { data })
 })
 
 module.exports = router

@@ -41,8 +41,10 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="目的地" show-overflow-tooltip>
-          <template slot-scope="{ row }">{{ getTarget(row) }}</template>
+        <el-table-column label="目的地">
+          <template slot-scope="{ row }">
+            <target-tooltip :row="row" />
+          </template>
         </el-table-column>
 
         <el-table-column prop="status" label="状态" width="100px">
@@ -107,7 +109,6 @@
 </template>
 
 <script>
-import stripJsonComments from 'strip-json-comments'
 import { resolveURL } from '@/utils'
 import {
   getProjectList,
@@ -120,11 +121,12 @@ import {
 
 import Action from '@/components/Action.vue'
 import ClipboardLink from '@/components/ClipboardLink'
+import TargetTooltip from './components/TargetTooltip.vue'
 import Status from './components/Status.vue'
 
 export default {
   name: 'ProjectList',
-  components: { Action, ClipboardLink, Status },
+  components: { Action, ClipboardLink, TargetTooltip, Status },
   filters: { resolveURL },
   data() {
     return {
@@ -278,13 +280,6 @@ export default {
       const config = row.configs.find(config => config.select)
 
       return config.id
-    },
-
-    getTarget(row) {
-      const config = row.configs.find(config => config.select)
-      const json = JSON.parse(stripJsonComments(config.jsonString))
-
-      return json.target
     },
   },
 }
