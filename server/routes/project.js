@@ -4,8 +4,8 @@ const stripJsonComments = require('strip-json-comments')
 const DBHandler = require('../handlers/DBHandler')
 const ProxyHandler = require('../handlers/ProxyHandler')
 
-const { getPort } = require('../utils/port')
-const { sendSuccess } = require('../utils/send')
+const { getPort, checkPortOccupy } = require('../utils/port')
+const { sendSuccess, sendFail } = require('../utils/send')
 const { SERVER_STATUS } = require('../utils/const')
 
 const router = Router()
@@ -43,10 +43,10 @@ router.post('/update', async (request, response) => {
 
 router.post('/delete', async (request, response) => {
   const ids = request.body.ids || []
-  const projects = db.findByIds(ids).filter(project => project.status === SERVER_STATUS.RUNNING)
-  const stops = projects.map(project => proxy.stop(project.id))
+  const runnings = db.findByIds(ids).filter(project => project.status === SERVER_STATUS.RUNNING)
+  const projects = runnings.map(project => proxy.stop(project.id))
 
-  await Promise.allSettled(stops)
+  await Promise.allSettled(projects)
 
   db.deleteByIds(ids)
 
@@ -94,18 +94,42 @@ router.post('/start', async (request, response) => {
   const json = JSON.parse(stripJsonComments(config.jsonString))
   const { port, status } = project
 
-  if (status === SERVER_STATUS.STOP) {
-    await proxy.start(id, port, json)
+  if (status === SERVER_STATUS.RUNNING) return sendFail(response, { message: '重复启动' })
 
-    project.status = SERVER_STATUS.RUNNING
-  }
+  const occupied = await checkPortOccupy(port)
+
+  if (occupied) return sendFail(response, { message: `${port} 端口被占用，请更换端口` })
+
+  await proxy.start(id, port, json)
+
+  project.status = SERVER_STATUS.RUNNING
 
   const data = db.update(project)
 
   sendSuccess(response, { data })
 })
 
-router.post('/reload', (request, response) => { })
+router.post('/reload', async (request, response) => {
+  const id = request.body.id
+  const project = db.findById(id)
+  const config = project.configs.find(config => config.select)
+  const json = JSON.parse(stripJsonComments(config.jsonString))
+  const port = project.port
+
+  await proxy.stop(id)
+
+  const occupied = await checkPortOccupy(port)
+
+  if (occupied) return sendFail(response, { message: `${port} 端口被占用，请更换端口` })
+
+  await proxy.start(id, port, json)
+
+  project.status = SERVER_STATUS.RUNNING
+
+  const data = db.update(project)
+
+  sendSuccess(response, { data })
+})
 
 router.post('/stop', async (request, response) => {
   const id = request.body.id

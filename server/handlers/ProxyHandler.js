@@ -20,17 +20,14 @@ class ProxyHandler {
 
   /**
    * @param {String} id
-   */
-  reload(id) { }
-
-  /**
-   * @param {String} id
    * @returns {Promise}
    */
   async stop(id) {
     const proxyServer = this.servers.get(id)
 
     if (proxyServer) await proxyServer.stop()
+
+    this.servers.delete(id)
   }
 }
 

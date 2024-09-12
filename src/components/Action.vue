@@ -32,7 +32,9 @@ export default {
   },
   methods: {
     handleBack() {
-      this.onBack ? this.onBack() : this.$router.back()
+      if (this.onBack) return this.onBack()
+
+      this.$router.back()
     },
   },
 }

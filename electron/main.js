@@ -7,7 +7,9 @@ const createWindow = () => {
     height: 600,
   })
 
-  win.loadURL('http://localhost:8800/')
+  server.then(port => {
+    win.loadURL(`http://localhost:${port}/`)
+  })
 }
 
 app.whenReady().then(() => {

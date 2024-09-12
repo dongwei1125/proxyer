@@ -64,7 +64,9 @@ class ProxyServer {
     const { promise, resolve, reject } = createPromise()
 
     this.server.close(error => {
-      error ? reject(error) : resolve()
+      if (error) return reject(error)
+
+      resolve()
     })
 
     return promise

@@ -53,7 +53,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="服务" width="160px">
+        <el-table-column label="代理" width="160px">
           <template slot-scope="{ row }">
             <el-tooltip content="启动" placement="top" effect="light">
               <el-button
@@ -191,6 +191,7 @@ export default {
         const { data } = await startProject({ id: row.id })
 
         this.updateRow(data)
+        this.$message.success('代理已启动')
       } catch {
       } finally {
         row.startLoading = false
@@ -199,11 +200,12 @@ export default {
 
     async handleReload(row) {
       try {
-        row.reloadLoading = false
+        row.reloadLoading = true
 
         const { data } = await reloadProject({ id: row.id })
 
         this.updateRow(data)
+        this.$message.success('重载成功')
       } catch {
       } finally {
         row.reloadLoading = false
@@ -217,6 +219,7 @@ export default {
         const { data } = await stopProject({ id: row.id })
 
         this.updateRow(data)
+        this.$message.success('代理已停止')
       } catch {
       } finally {
         row.stopLoading = false

@@ -3,10 +3,12 @@ const { join } = require('path')
 const { cyan } = require('chalk')
 const { program } = require('commander')
 
+const { createPromise } = require('./utils')
 const projectRouter = require('./routes/project')
 const config = require('./server.config')
 
 const app = express()
+const server = createPromise()
 const option = program.option('-p, --port <number>', 'port number', config.port)
 const { port } = option.parse(process.argv).opts()
 
@@ -20,4 +22,7 @@ app.listen(port, () => {
   console.log('  Express server started on:')
   console.log(`  - Local:   ${cyan(`http://localhost:${port}/`)}`)
   console.log()
+  server.resolve(port)
 })
+
+module.exports = server.promise
