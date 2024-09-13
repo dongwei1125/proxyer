@@ -11,6 +11,14 @@
     <el-button type="text" icon="el-icon-info" @click="visible = true">关于</el-button>
 
     <about-dialog :visible.sync="visible" />
+
+    <span @click="handleSetTop">置顶</span>
+
+    <span @click="handleMin">最小化</span>
+
+    <span @click="handleMax">最大化</span>
+
+    <span @click="handleClose">关闭</span>
   </div>
 </template>
 
@@ -25,6 +33,23 @@ export default {
     return {
       visible: false,
     }
+  },
+  methods: {
+    handleSetTop() {
+      window.ipcRenderer?.send('set-always-on-top')
+    },
+
+    handleMin() {
+      window.ipcRenderer?.send('window-min')
+    },
+
+    handleMax() {
+      window.ipcRenderer?.send('window-max')
+    },
+
+    handleClose() {
+      window.ipcRenderer?.send('window-close')
+    },
   },
 }
 </script>

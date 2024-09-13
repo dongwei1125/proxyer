@@ -16,9 +16,9 @@
       >
         <el-table-column type="selection" width="60px" />
 
-        <el-table-column prop="name" label="名称" show-overflow-tooltip />
+        <el-table-column prop="name" label="名称" show-overflow-tooltip min-width="100px" />
 
-        <el-table-column label="配置文件">
+        <el-table-column label="配置文件" width="200px">
           <template slot-scope="{ row }">
             <el-select
               :value="getConfig(row)"
@@ -35,13 +35,13 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="地址" show-overflow-tooltip>
+        <el-table-column label="地址" show-overflow-tooltip min-width="120px">
           <template slot-scope="{ row }">
             <clipboard-link :text="row.port | resolveURL" />
           </template>
         </el-table-column>
 
-        <el-table-column label="目的地">
+        <el-table-column label="目的地" min-width="100px">
           <template slot-scope="{ row }">
             <target-tooltip :row="row" />
           </template>
@@ -291,6 +291,10 @@ export default {
 <style scoped>
 .project-list-table {
   padding: 24px;
+}
+
+.el-select {
+  width: 100%;
 }
 
 .el-pagination {

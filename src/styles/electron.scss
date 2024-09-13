@@ -1,0 +1,11 @@
+.banner {
+  -webkit-app-region: drag;
+
+  .el-button {
+    -webkit-app-region: no-drag;
+  }
+
+  span {
+    -webkit-app-region: no-drag;
+  }
+}
