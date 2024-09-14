@@ -6,4 +6,8 @@
     "source.fixAll.eslint": "always"
   },
   "editor.formatOnSave": true,
+  "npm.exclude": [
+    "**/server",
+    "**/electron"
+  ]
 }

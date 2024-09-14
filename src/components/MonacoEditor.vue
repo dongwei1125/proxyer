@@ -26,7 +26,6 @@ export default {
         theme: 'vs-light',
         language: 'json',
         tabSize: 2, // Tab 缩进
-        automaticLayout: true, // 自动布局
         scrollBeyondLastLine: false, // 是否可以滚动到最后一行之后
         minimap: { enabled: false }, // 是否启用预览
       },

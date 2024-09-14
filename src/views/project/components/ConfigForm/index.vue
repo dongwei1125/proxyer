@@ -179,11 +179,11 @@ export default {
 }
 
 .el-form {
-  flex: 1;
+  width: 50%;
   padding: 24px;
 }
 
 .monaco-editor {
-  flex: 1;
+  width: 50%;
 }
 </style>
