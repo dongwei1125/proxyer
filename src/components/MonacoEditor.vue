@@ -23,7 +23,7 @@ export default {
       editor: null,
       options: {
         value: this.value,
-        theme: 'vs-light',
+        theme: 'vs-dark',
         language: 'json',
         tabSize: 2, // Tab 缩进
         scrollBeyondLastLine: false, // 是否可以滚动到最后一行之后

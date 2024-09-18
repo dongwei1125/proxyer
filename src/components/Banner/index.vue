@@ -1,79 +1,138 @@
 <template>
   <div class="banner">
-    <img src="@/assets/logo.png" alt="" />
+    <div class="banner-left">
+      <img src="@/assets/logo.png" alt="" />
 
-    <h1>Proxyer 0.1.0</h1>
+      <h1>Proxyer 0.1.0</h1>
 
-    <theme-toggle />
+      <el-button type="text" icon="el-icon-document-copy">文档</el-button>
 
-    <el-button type="text" icon="el-icon-document-copy">文档</el-button>
+      <el-button type="text" icon="el-icon-info" @click="visible = true">关于</el-button>
+    </div>
 
-    <el-button type="text" icon="el-icon-info" @click="visible = true">关于</el-button>
+    <div v-if="isElectron" class="banner-right">
+      <div class="button" title="置顶" @click="handleSetTop">
+        <i class="el-icon-s-check" />
+      </div>
+
+      <div class="button" title="最小化" @click="handleMin">
+        <i class="el-icon-minus" />
+      </div>
+
+      <div class="button" title="还原" @click="handleMax">
+        <i class="el-icon-copy-document" />
+      </div>
+
+      <div class="button close" title="关闭" @click="handleClose">
+        <i class="el-icon-close" />
+      </div>
+    </div>
 
     <about-dialog :visible.sync="visible" />
-
-    <span @click="handleSetTop">置顶</span>
-
-    <span @click="handleMin">最小化</span>
-
-    <span @click="handleMax">最大化</span>
-
-    <span @click="handleClose">关闭</span>
   </div>
 </template>
 
 <script>
-import ThemeToggle from '../ThemeToggle'
+import message from '@/utils/message'
+
 import AboutDialog from './AboutDialog.vue'
 
 export default {
   name: 'Banner',
-  components: { ThemeToggle, AboutDialog },
+  components: { AboutDialog },
   data() {
     return {
       visible: false,
     }
   },
+  computed: {
+    isElectron() {
+      return window.ipcRenderer
+    },
+  },
   methods: {
-    handleSetTop() {
-      window.ipcRenderer?.send('set-always-on-top')
+    async handleSetTop() {
+      const data = await message.send('set-always-on-top')
+
+      console.log(data)
     },
 
-    handleMin() {
-      window.ipcRenderer?.send('window-min')
+    async handleMin() {
+      const data = await message.send('window-min')
+
+      console.log(data)
     },
 
-    handleMax() {
-      window.ipcRenderer?.send('window-max')
+    async handleMax() {
+      const data = await message.send('window-max')
+
+      console.log(data)
     },
 
-    handleClose() {
-      window.ipcRenderer?.send('window-close')
+    async handleClose() {
+      const data = await message.send('window-close')
+
+      console.log(data)
     },
   },
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .banner {
   height: 60px;
-  line-height: 60px;
   padding: 0 20px;
   display: flex;
+  justify-content: space-between;
+}
+
+.banner-left {
+  display: flex;
   align-items: center;
+
+  img {
+    height: 40px;
+  }
+
+  h1 {
+    font-size: 20px;
+    margin: 0 0 0 20px;
+  }
+
+  .el-button {
+    margin-left: 10px;
+  }
 }
 
-img {
-  height: 40px;
-}
+.banner-right {
+  display: flex;
+  align-items: center;
 
-h1 {
-  flex: 1;
-  font-size: 20px;
-  margin: 0 0 0 20px;
-}
+  .button {
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    color: #ccc;
+    text-align: center;
+    cursor: pointer;
 
-.el-button {
-  margin-left: 10px;
+    &:hover {
+      background-color: #363737;
+    }
+
+    &:active {
+      background-color: #393a3a;
+    }
+
+    &.close {
+      &:hover {
+        background-color: #eb1123;
+      }
+
+      &:active {
+        background-color: #a2222c;
+      }
+    }
+  }
 }
 </style>

@@ -1,5 +1,5 @@
 @import 'normalize.css/normalize.css';
-@import './electron.scss';
+@import './exe.scss';
 
 .el-container {
   height: 100%;
@@ -11,31 +11,17 @@
 }
 
 .banner {
-  background-color: #fff;
+  background-color: #252526;
+}
+
+.subtitle::before {
+  background-color: #4c4d4f;
 }
 
 .project-list-table {
-  background-color: #fff;
+  background-color: #141414;
 }
 
 .el-form {
-  background-color: #fff;
-}
-
-html.dark {
-  .banner {
-    background-color: #141414;
-  }
-
-  .project-list-table {
-    background-color: #141414;
-  }
-
-  .el-form {
-    background-color: #141414;
-  }
-
-  .monaco-editor {
-    background-color: #1e1e1e;
-  }
+  background-color: #141414;
 }

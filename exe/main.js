@@ -1,9 +1,10 @@
 const { app, BrowserWindow } = require('electron/main')
+
 require('electron-reloader')(module)
 
 const createEvent = require('./utils/event')
 const createTray = require('./utils/tray')
-const { preload } = require('./electron.config')
+const { preload } = require('./exe.config')
 
 const server = require('../server/app')
 
@@ -26,7 +27,8 @@ app.whenReady().then(() => {
   createEvent(app, win)
   createTray(app, win)
 
-  server.then(port => {
-    win.loadURL(`http://localhost:${port}/`)
+  server.then(async port => {
+    await win.loadURL(`http://localhost:${port}/`)
+    win.webContents.openDevTools()
   })
 })

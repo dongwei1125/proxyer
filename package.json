@@ -6,6 +6,10 @@
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build"
   },
+  "workspaces": [
+    "exe",
+    "server"
+  ],
   "dependencies": {
     "@monaco-editor/loader": "^1.4.0",
     "axios": "^1.7.7",

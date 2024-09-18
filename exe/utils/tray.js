@@ -1,6 +1,6 @@
 const { Tray, Menu } = require('electron/main')
 
-const { trayIcon, trayToolTip } = require('../electron.config')
+const { trayIcon, trayToolTip } = require('../exe.config')
 
 const menus = (app, win) => [
   {
