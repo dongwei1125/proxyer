@@ -28,6 +28,7 @@ export default {
         tabSize: 2, // Tab 缩进
         scrollBeyondLastLine: false, // 是否可以滚动到最后一行之后
         minimap: { enabled: false }, // 是否启用预览
+        wordWrap: 'on', // 自动换行
       },
     }
   },

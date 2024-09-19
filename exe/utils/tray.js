@@ -12,8 +12,18 @@ const menus = (app, win) => [
     click: () => win.hide(),
   },
   {
+    label: '重启',
+    click: () => {
+      win.show()
+      win.reload()
+    },
+  },
+  {
     label: '退出',
-    click: () => app.quit(),
+    click: () => {
+      win.destroy()
+      app.quit()
+    },
   },
 ]
 

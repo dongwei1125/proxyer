@@ -1,4 +1,7 @@
 import { customAlphabet, nanoid } from 'nanoid'
+import isElectronEnv from 'is-electron'
+
+export const isElectron = isElectronEnv()
 
 /**
  * @param {Number} port

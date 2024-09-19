@@ -181,6 +181,7 @@ export default {
 .el-form {
   width: 50%;
   padding: 24px;
+  background-color: #141414;
 }
 
 .monaco-editor {

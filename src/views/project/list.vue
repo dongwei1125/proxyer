@@ -100,9 +100,11 @@
         background
         :page-size="pagination.pageSize"
         :current-page="pagination.pageNo"
+        :page-sizes="[5, 10, 15, 20]"
         :total="total"
-        layout="total, prev, pager, next"
-        @current-change="handleCurrentChange"
+        layout="total, sizes, prev, pager, next"
+        @current-change="onCurrentChange"
+        @size-change="onSizeChange"
       />
     </div>
   </div>
@@ -226,8 +228,14 @@ export default {
       }
     },
 
-    handleCurrentChange(pageNo) {
+    onCurrentChange(pageNo) {
       this.pagination.pageNo = pageNo
+
+      this.getTableData()
+    },
+
+    onSizeChange(pageSize) {
+      this.pagination.pageSize = pageSize
 
       this.getTableData()
     },
@@ -291,6 +299,7 @@ export default {
 <style scoped>
 .project-list-table {
   padding: 24px;
+  background-color: #141414;
 }
 
 .el-select {

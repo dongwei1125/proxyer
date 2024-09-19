@@ -78,6 +78,7 @@ export default {
     left: -20px;
     top: 50%;
     transform: translateY(-50%);
+    background-color: #4c4d4f;
   }
 }
 </style>

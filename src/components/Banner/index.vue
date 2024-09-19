@@ -11,19 +11,23 @@
     </div>
 
     <div v-if="isElectron" class="banner-right">
-      <div class="button" title="置顶" @click="handleSetTop">
+      <div class="top-button" :class="{ active: isAlwaysOnTop }" title="置顶" @click="handleSetTop">
         <i class="el-icon-s-check" />
       </div>
 
-      <div class="button" title="最小化" @click="handleMin">
+      <div class="min-button" title="最小化" @click="handleMin">
         <i class="el-icon-minus" />
       </div>
 
-      <div class="button" title="还原" @click="handleMax">
+      <div v-if="isMaximized" class="restore-button" title="还原" @click="handleMax">
         <i class="el-icon-copy-document" />
       </div>
 
-      <div class="button close" title="关闭" @click="handleClose">
+      <div v-else class="max-button" title="最大化" @click="handleMax">
+        <i class="el-icon-full-screen" />
+      </div>
+
+      <div class="close-button" title="关闭" @click="handleClose">
         <i class="el-icon-close" />
       </div>
     </div>
@@ -33,6 +37,7 @@
 </template>
 
 <script>
+import { isElectron } from '@/utils'
 import message from '@/utils/message'
 
 import AboutDialog from './AboutDialog.vue'
@@ -42,48 +47,73 @@ export default {
   components: { AboutDialog },
   data() {
     return {
+      isElectron,
       visible: false,
+      isAlwaysOnTop: false,
+      isMaximized: false,
     }
   },
-  computed: {
-    isElectron() {
-      return window.ipcRenderer
-    },
+  created() {
+    this.addEventListener()
   },
   methods: {
-    async handleSetTop() {
-      const data = await message.send('set-always-on-top')
+    addEventListener() {
+      message.on('always-on-top-changed', (event, isAlwaysOnTop) => {
+        this.isAlwaysOnTop = isAlwaysOnTop
+      })
 
-      console.log(data)
+      message.on('maximize', () => {
+        this.isMaximized = true
+      })
+
+      message.on('unmaximize', () => {
+        this.isMaximized = false
+      })
     },
 
-    async handleMin() {
-      const data = await message.send('window-min')
-
-      console.log(data)
+    handleSetTop() {
+      message.send('set-always-on-top')
     },
 
-    async handleMax() {
-      const data = await message.send('window-max')
-
-      console.log(data)
+    handleMin() {
+      message.send('window-min')
     },
 
-    async handleClose() {
-      const data = await message.send('window-close')
+    handleMax() {
+      message.send('window-max')
+    },
 
-      console.log(data)
+    handleClose() {
+      message.send('window-close')
     },
   },
 }
 </script>
 
 <style lang="scss" scoped>
+@mixin button {
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  color: #ccc;
+  text-align: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #363737;
+  }
+
+  &:active {
+    background-color: #393a3a;
+  }
+}
+
 .banner {
   height: 60px;
   padding: 0 20px;
   display: flex;
   justify-content: space-between;
+  background-color: #252526;
 }
 
 .banner-left {
@@ -108,30 +138,29 @@ export default {
   display: flex;
   align-items: center;
 
-  .button {
-    width: 36px;
-    height: 36px;
-    line-height: 36px;
-    color: #ccc;
-    text-align: center;
-    cursor: pointer;
+  .top-button {
+    @include button;
+
+    &.active {
+      color: #409eff;
+    }
+  }
+
+  .min-button,
+  .max-button,
+  .restore-button {
+    @include button;
+  }
+
+  .close-button {
+    @include button;
 
     &:hover {
-      background-color: #363737;
+      background-color: #eb1123;
     }
 
     &:active {
-      background-color: #393a3a;
-    }
-
-    &.close {
-      &:hover {
-        background-color: #eb1123;
-      }
-
-      &:active {
-        background-color: #a2222c;
-      }
+      background-color: #a2222c;
     }
   }
 }

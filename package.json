@@ -17,6 +17,7 @@
     "core-js": "^3.8.3",
     "element-theme-darkplus": "^2.1.4",
     "element-ui": "^2.15.14",
+    "is-electron": "^2.2.2",
     "monaco-editor": "^0.51.0",
     "nanoid": "^3.3.7",
     "normalize.css": "^8.0.1",

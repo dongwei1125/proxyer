@@ -1,30 +1,22 @@
-const renderer = window.ipcRenderer
-const channel = 'ipc-message'
-const ipcRenderers = new Map()
-
-renderer?.on(channel, (event, { eventName, data, error, timestamp }) => {
-  const key = `${eventName}_${timestamp}`
-  const { resolve, reject } = ipcRenderers.get(key)
-
-  if (error) {
-    reject(error)
-  } else {
-    resolve(data)
+class Message {
+  constructor() {
+    this.renderer = window.ipcRenderer
   }
-})
 
-/**
- * @param {String} eventName
- * @returns {Promise}
- */
-function send(eventName, ...args) {
-  return new Promise((resolve, reject) => {
-    const timestamp = window.performance.now()
-    const key = `${eventName}_${timestamp}`
+  /**
+   * @param {String} eventName
+   */
+  send(eventName, ...args) {
+    this.renderer?.send(eventName, ...args)
+  }
 
-    ipcRenderers.set(key, { resolve, reject })
-    renderer?.send(channel, { eventName, args, timestamp })
-  })
+  /**
+   * @param {String} eventName
+   * @param {Function} callback
+   */
+  on(eventName, callback) {
+    this.renderer?.on(eventName, callback)
+  }
 }
 
-export default { send }
+export default new Message()

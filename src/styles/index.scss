@@ -1,6 +1,31 @@
 @import 'normalize.css/normalize.css';
 @import './exe.scss';
 
+@mixin scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px
+  }
+
+  &::-webkit-scrollbar:horizontal {
+    height: 6px
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #fff3;
+    border-radius: 10px;
+    transition: all .2s ease-in-out;
+    cursor: pointer;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #fff6
+  }
+}
+
 .el-container {
   height: 100%;
 }
@@ -10,18 +35,6 @@
   padding: 0;
 }
 
-.banner {
-  background-color: #252526;
-}
-
-.subtitle::before {
-  background-color: #4c4d4f;
-}
-
-.project-list-table {
-  background-color: #141414;
-}
-
-.el-form {
-  background-color: #141414;
+.el-main {
+  @include scrollbar;
 }

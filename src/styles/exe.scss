@@ -5,7 +5,11 @@
     -webkit-app-region: no-drag;
   }
 
-  .button {
+  .top-button,
+  .min-button,
+  .max-button,
+  .restore-button,
+  .close-button {
     -webkit-app-region: no-drag;
   }
 }
