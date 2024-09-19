@@ -11,8 +11,8 @@ const server = require('../server/app')
 const options = {
   width: 1200,
   height: 700,
-  minWidth: 960,
-  minHeight: 600,
+  minWidth: 1000,
+  minHeight: 640,
   frame: false,
   center: true,
   webPreferences: {
@@ -21,7 +21,7 @@ const options = {
   },
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   const win = new BrowserWindow(options)
 
   createEvent(app, win)

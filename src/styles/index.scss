@@ -33,8 +33,9 @@
 .el-header,
 .el-main {
   padding: 0;
+  overflow: hidden;
 }
 
-.el-main {
+.el-table__body-wrapper {
   @include scrollbar;
 }

@@ -9,16 +9,18 @@
 
     <div class="project-list-table">
       <el-table
+        ref="table"
         v-loading="loading"
         :data="tableData"
+        :max-height="maxHeight"
         tooltip-effect="light"
         @selection-change="selectionChange"
       >
         <el-table-column type="selection" width="60px" />
 
-        <el-table-column prop="name" label="名称" show-overflow-tooltip min-width="100px" />
+        <el-table-column prop="name" label="名称" show-overflow-tooltip min-width="60px" />
 
-        <el-table-column label="配置文件" width="200px">
+        <el-table-column label="配置文件" width="180px">
           <template slot-scope="{ row }">
             <el-select
               :value="getConfig(row)"
@@ -35,25 +37,25 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="地址" show-overflow-tooltip min-width="120px">
+        <el-table-column label="地址" show-overflow-tooltip min-width="100px">
           <template slot-scope="{ row }">
             <clipboard-link :text="row.port | resolveURL" />
           </template>
         </el-table-column>
 
-        <el-table-column label="目的地" min-width="100px">
+        <el-table-column label="目的地" min-width="120px">
           <template slot-scope="{ row }">
             <target-tooltip :row="row" />
           </template>
         </el-table-column>
 
-        <el-table-column prop="status" label="状态" width="100px">
+        <el-table-column prop="status" label="状态" width="80px">
           <template slot-scope="{ row }">
             <status :status="row.status" />
           </template>
         </el-table-column>
 
-        <el-table-column label="代理" width="160px">
+        <el-table-column label="代理" width="140px">
           <template slot-scope="{ row }">
             <el-tooltip content="启动" placement="top" effect="light">
               <el-button
@@ -87,7 +89,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" width="120px">
+        <el-table-column label="操作" width="90px">
           <template slot-scope="{ row }">
             <el-button type="text" @click="handleUpdate(row)">编辑</el-button>
 
@@ -95,7 +97,9 @@
           </template>
         </el-table-column>
       </el-table>
+    </div>
 
+    <div class="project-list-footer">
       <el-pagination
         background
         :page-size="pagination.pageSize"
@@ -120,6 +124,7 @@ import {
   reloadProject,
   stopProject,
 } from '@/api/project'
+import adaptive from './adaptive'
 
 import Action from '@/components/Action.vue'
 import ClipboardLink from '@/components/ClipboardLink'
@@ -130,6 +135,7 @@ export default {
   name: 'ProjectList',
   components: { Action, ClipboardLink, TargetTooltip, Status },
   filters: { resolveURL },
+  mixins: [adaptive],
   data() {
     return {
       tableData: [],
@@ -298,16 +304,17 @@ export default {
 
 <style scoped>
 .project-list-table {
-  padding: 24px;
+  padding: 24px 24px 0;
+  background-color: #141414;
+}
+
+.project-list-footer {
+  padding: 24px 14px 24px 0;
+  text-align: right;
   background-color: #141414;
 }
 
 .el-select {
   width: 100%;
-}
-
-.el-pagination {
-  text-align: right;
-  margin-top: 24px;
 }
 </style>
