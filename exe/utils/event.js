@@ -1,3 +1,5 @@
+const { shell } = require('electron')
+
 const Message = require('./Message')
 
 /**
@@ -46,6 +48,12 @@ function event(app, win) {
   win.on('close', event => {
     event.preventDefault()
     win.hide()
+  })
+
+  win.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url)
+
+    return { action: 'deny' }
   })
 }
 

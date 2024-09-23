@@ -124,7 +124,7 @@ import {
   reloadProject,
   stopProject,
 } from '@/api/project'
-import adaptive from './adaptive'
+import resize from './resize'
 
 import Action from '@/components/Action.vue'
 import ClipboardLink from '@/components/ClipboardLink'
@@ -135,7 +135,7 @@ export default {
   name: 'ProjectList',
   components: { Action, ClipboardLink, TargetTooltip, Status },
   filters: { resolveURL },
-  mixins: [adaptive],
+  mixins: [resize],
   data() {
     return {
       tableData: [],

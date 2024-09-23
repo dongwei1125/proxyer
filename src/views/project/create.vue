@@ -60,5 +60,6 @@ export default {
 
 .project-create-content {
   flex: 1;
+  overflow: hidden;
 }
 </style>

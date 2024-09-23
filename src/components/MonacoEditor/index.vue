@@ -6,8 +6,11 @@
 import * as monaco from 'monaco-editor'
 import loader from '@monaco-editor/loader'
 
+import resize from './resize'
+
 export default {
   name: 'MonacoEditor',
+  mixins: [resize],
   model: {
     prop: 'value',
     event: 'input',

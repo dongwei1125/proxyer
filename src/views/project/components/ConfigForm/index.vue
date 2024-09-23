@@ -32,7 +32,7 @@
 import stripJsonComments from 'strip-json-comments'
 import { validateURL } from '@/utils'
 
-import MonacoEditor from '@/components/MonacoEditor.vue'
+import MonacoEditor from '@/components/MonacoEditor'
 import ApplyPort from './ApplyPort.vue'
 import ConfigGroup from './ConfigGroup.vue'
 
@@ -182,6 +182,11 @@ export default {
   width: 50%;
   padding: 24px;
   background-color: #141414;
+  overflow: auto;
+}
+
+.el-form-item:last-child {
+  margin-bottom: 0;
 }
 
 .monaco-editor {
